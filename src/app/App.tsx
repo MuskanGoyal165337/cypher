@@ -11,7 +11,8 @@ import { ScenarioControls } from "@/app/components/ScenarioControls";
 import { INITIAL_BALANCE, MOCK_STOCKS, PortfolioItem, Stock } from "@/lib/mockData";
 import { MOCK_NEWS } from "@/lib/newsData";
 import { Scenario, buildPriceHistory, isSymbolInScenario } from "@/lib/historicalScenarios";
-import { logTrade, clearTradeLog } from "@/lib/behaviorTracker";
+import { logTrade, clearTradeLog, getTradeLog, generateBehaviorSummary, TradeAction, BehaviorSummary } from "@/lib/behaviorTracker";
+import { ScenarioSummary } from "@/app/components/ScenarioSummary";
 import { toast, Toaster } from "sonner";
 import { Search, History } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -28,6 +29,15 @@ export default function App() {
   const [isScenarioSelectorOpen, setIsScenarioSelectorOpen] = useState(false);
   const [activeScenario, setActiveScenario] = useState<Scenario | null>(null);
   const [scenarioDayIndex, setScenarioDayIndex] = useState(0);
+
+  // Scenario summary modal state
+  const [showSummary, setShowSummary] = useState(false);
+  const [summaryData, setSummaryData] = useState<{
+    scenario: Scenario;
+    trades: TradeAction[];
+    summary: BehaviorSummary;
+    finalBalance: number;
+  } | null>(null);
 
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
@@ -73,19 +83,44 @@ export default function App() {
 
   // Handle scenario selection
   const handleSelectScenario = (scenario: Scenario | null) => {
+    // If exiting a scenario, show the summary first
+    if (activeScenario && scenario === null) {
+      const trades = getTradeLog(activeScenario.id);
+      const summary = generateBehaviorSummary(activeScenario.id, activeScenario.behavior);
+      setSummaryData({
+        scenario: activeScenario,
+        trades,
+        summary,
+        finalBalance: balance + portfolio.reduce((sum, item) => {
+          const stock = stocks.find(s => s.symbol === item.symbol);
+          return sum + (stock ? stock.price * item.shares : 0);
+        }, 0)
+      });
+      setShowSummary(true);
+      return; // Don't clear yet, wait for modal close
+    }
+
     setActiveScenario(scenario);
     setScenarioDayIndex(0);
     if (scenario) {
       setBalance(scenario.startingBalance);
       setPortfolio([]);
       toast.success(`Started: ${scenario.name}`);
-    } else {
-      setBalance(INITIAL_BALANCE);
-      setPortfolio([]);
-      setIsLive(true);
-      clearTradeLog(); // Clear behavior tracking for next session
-      toast.success('Switched to Live Market');
     }
+  };
+
+  // Handle closing the summary modal
+  const handleCloseSummary = () => {
+    setShowSummary(false);
+    setSummaryData(null);
+    setActiveScenario(null);
+    setScenarioDayIndex(0);
+    setBalance(INITIAL_BALANCE);
+    setPortfolio([]);
+    setStocks(MOCK_STOCKS);
+    setIsLive(true);
+    clearTradeLog();
+    toast.success('Switched to Live Market');
   };
 
   // Real-time Stock Data Fetching via Finnhub API (only when not in scenario mode)
@@ -481,6 +516,19 @@ export default function App() {
         onSelectScenario={handleSelectScenario}
         activeScenario={activeScenario}
       />
+
+      {/* Scenario Summary Modal */}
+      {summaryData && (
+        <ScenarioSummary
+          isOpen={showSummary}
+          onClose={handleCloseSummary}
+          scenario={summaryData.scenario}
+          trades={summaryData.trades}
+          summary={summaryData.summary}
+          finalBalance={summaryData.finalBalance}
+          startingBalance={summaryData.scenario.startingBalance}
+        />
+      )}
 
       <Toaster position="top-center" theme="dark" />
     </div>
