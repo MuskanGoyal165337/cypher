@@ -36,7 +36,7 @@ export function Chatbot({ stocks, portfolio, balance, netWorth, news, isOpen, on
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { id: 1, text: "Hello! I'm FinBot, your AI Financial Advisor with real-time market access. I can analyze your portfolio, discuss specific stocks (RELIANCE, TCS, INFY, HDFCBANK, ICICIBANK), review recent news, and provide personalized investment strategies. What would you like to know?", sender: 'bot' }
+    { id: 1, text: "Hello! I'm FinBot, your AI Financial Advisor with real-time market access. I can analyze your portfolio, discuss stocks, review recent news, and provide personalized investment strategies. What would you like to know?", sender: 'bot' }
   ]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
