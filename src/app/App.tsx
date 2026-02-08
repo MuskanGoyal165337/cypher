@@ -12,7 +12,9 @@ import { INITIAL_BALANCE, MOCK_STOCKS, PortfolioItem, Stock } from "@/lib/mockDa
 import { MOCK_NEWS } from "@/lib/newsData";
 import { Scenario, buildPriceHistory, isSymbolInScenario } from "@/lib/historicalScenarios";
 import { logTrade, clearTradeLog, getTradeLog, generateBehaviorSummary, TradeAction, BehaviorSummary } from "@/lib/behaviorTracker";
+import { addScenarioResult } from "@/lib/scenarioHistory";
 import { ScenarioSummary } from "@/app/components/ScenarioSummary";
+import { ProfileView } from "@/app/components/ProfileView";
 import { toast, Toaster } from "sonner";
 import { Search, History } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -24,6 +26,7 @@ export default function App() {
   const [stocks, setStocks] = useState<Stock[]>(MOCK_STOCKS);
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
   const [netWorthHistory, setNetWorthHistory] = useState<{ time: string; value: number }[]>([]);
+  const [scenarioNetWorthHistory, setScenarioNetWorthHistory] = useState<{ time: string; value: number }[]>([]);
   const [isLive, setIsLive] = useState(true);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [isScenarioSelectorOpen, setIsScenarioSelectorOpen] = useState(false);
@@ -130,12 +133,30 @@ export default function App() {
     if (scenario) {
       setBalance(scenario.startingBalance);
       setPortfolio([]);
+      setScenarioNetWorthHistory([]); // Clear scenario chart for fresh start
       toast.success(`Started: ${scenario.name}`);
     }
   };
 
   // Handle closing the summary modal
   const handleCloseSummary = () => {
+    // Save scenario result to history before clearing
+    if (summaryData && summaryData.scenario) {
+      addScenarioResult({
+        scenarioId: summaryData.scenario.id,
+        scenarioName: summaryData.scenario.name,
+        scenarioIcon: summaryData.scenario.icon,
+        startingBalance: summaryData.scenario.startingBalance,
+        finalBalance: summaryData.finalBalance,
+        profitLoss: summaryData.finalBalance - summaryData.scenario.startingBalance,
+        profitLossPercent: ((summaryData.finalBalance - summaryData.scenario.startingBalance) / summaryData.scenario.startingBalance) * 100,
+        totalTrades: summaryData.summary.totalTrades,
+        learningScore: summaryData.summary.learningScore,
+        daysCompleted: scenarioDayIndex + 1,
+        totalDays: summaryData.scenario.days.length
+      });
+    }
+
     setShowSummary(false);
     setSummaryData(null);
     setActiveScenario(null);
@@ -267,7 +288,7 @@ export default function App() {
     return () => clearInterval(interval);
   }, [activeScenario]); // Re-run effect when activeScenario changes to stop/start interval
 
-  // Track Net Worth History
+  // Track Net Worth History (separate for live market and scenarios)
   useEffect(() => {
     const portfolioValue = portfolio.reduce((sum, item) => {
       const stock = stocks.find(s => s.symbol === item.symbol);
@@ -275,16 +296,25 @@ export default function App() {
     }, 0);
 
     const currentNetWorth = balance + portfolioValue;
+    const newEntry = {
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      value: currentNetWorth
+    };
 
-    setNetWorthHistory(prev => {
-      const newEntry = {
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        value: currentNetWorth
-      };
-      const newHistory = [...prev, newEntry];
-      return newHistory.length > 20 ? newHistory.slice(newHistory.length - 20) : newHistory;
-    });
-  }, [stocks, balance, portfolio]); // Update when stocks update (every 3s)
+    if (activeScenario) {
+      // Track scenario net worth separately
+      setScenarioNetWorthHistory(prev => {
+        const newHistory = [...prev, newEntry];
+        return newHistory.length > 30 ? newHistory.slice(newHistory.length - 30) : newHistory;
+      });
+    } else {
+      // Track live market net worth
+      setNetWorthHistory(prev => {
+        const newHistory = [...prev, newEntry];
+        return newHistory.length > 20 ? newHistory.slice(newHistory.length - 20) : newHistory;
+      });
+    }
+  }, [stocks, balance, portfolio, activeScenario]);
 
   const handleBuy = (stock: Stock, shares: number) => {
     const cost = stock.price * shares;
@@ -390,7 +420,10 @@ export default function App() {
             portfolio={portfolio}
             stocks={stocks}
             netWorth={currentNetWorth}
-            history={netWorthHistory.length > 0 ? netWorthHistory : stocks[0].history}
+            history={activeScenario
+              ? (scenarioNetWorthHistory.length > 0 ? scenarioNetWorthHistory : [{ time: 'Start', value: balance }])
+              : (netWorthHistory.length > 0 ? netWorthHistory : stocks[0].history)
+            }
             onTabChange={setActiveTab}
           />
         );
@@ -489,6 +522,8 @@ export default function App() {
         );
       case 'news':
         return <NewsView activeScenario={activeScenario} scenarioDayIndex={scenarioDayIndex} />;
+      case 'profile':
+        return <ProfileView />;
       default:
         return null;
     }

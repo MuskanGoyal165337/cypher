@@ -1,4 +1,4 @@
-import { BarChart2, History, LayoutDashboard, MessageSquare, Newspaper, PieChart, Settings } from "lucide-react";
+import { BarChart2, History, LayoutDashboard, Newspaper, PieChart, User } from "lucide-react";
 import { Scenario } from "@/lib/historicalScenarios";
 
 interface SidebarProps {
@@ -65,9 +65,15 @@ export function Sidebar({ activeTab, onTabChange, activeScenario }: SidebarProps
       </div>
 
       <div className="mt-auto p-6 border-t border-gray-900">
-        <button className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors w-full px-4 py-2">
-          <Settings className="w-5 h-5" />
-          Settings
+        <button
+          onClick={() => onTabChange('profile')}
+          className={`flex items-center gap-3 transition-colors w-full px-4 py-2 rounded-xl ${activeTab === 'profile'
+              ? 'bg-purple-600/10 text-purple-400 font-medium border border-purple-600/20'
+              : 'text-gray-400 hover:text-white hover:bg-gray-900'
+            }`}
+        >
+          <User className="w-5 h-5" />
+          Profile
         </button>
       </div>
     </div>
