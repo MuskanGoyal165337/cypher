@@ -24,10 +24,10 @@ export function StockCard({ stock, onClick }: StockCardProps) {
         </div>
         <div className={`flex items-center gap-1 text-sm font-medium ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
           {isPositive ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
-          {Math.abs(stock.changePercent).toFixed(5)}%
+          {Math.abs(stock.changePercent).toFixed(3)}%
         </div>
       </div>
-      
+
       <div className="flex justify-between items-end mt-4">
         <span className="text-2xl font-bold text-white">₹{stock.price.toFixed(2)}</span>
         <TrendingUp className={`w-12 h-6 ${isPositive ? 'text-green-500/20' : 'text-red-500/20'}`} />
