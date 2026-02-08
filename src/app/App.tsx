@@ -40,6 +40,31 @@ export default function App() {
   } | null>(null);
 
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [isMarketOpen, setIsMarketOpen] = useState(true);
+
+  // Check if US market (NYSE/NASDAQ) is open
+  // Hours: 9:30 AM - 4:00 PM EST, Monday-Friday
+  const checkMarketOpen = (): boolean => {
+    const now = new Date();
+    // Convert to EST (UTC-5) or EDT (UTC-4)
+    const estOffset = -5; // Standard EST
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const estTime = new Date(utc + (3600000 * estOffset));
+
+    const day = estTime.getDay(); // 0 = Sunday, 6 = Saturday
+    const hours = estTime.getHours();
+    const minutes = estTime.getMinutes();
+    const timeInMinutes = hours * 60 + minutes;
+
+    // Market open: 9:30 AM (570 min) to 4:00 PM (960 min), Mon-Fri
+    const marketOpen = 570;  // 9:30 AM
+    const marketClose = 960; // 4:00 PM
+
+    const isWeekday = day >= 1 && day <= 5;
+    const isDuringHours = timeInMinutes >= marketOpen && timeInMinutes < marketClose;
+
+    return isWeekday && isDuringHours;
+  };
 
   // Update stocks when scenario changes - uses accurate historical price data
   useEffect(() => {
@@ -127,7 +152,19 @@ export default function App() {
   useEffect(() => {
     if (activeScenario) return; // Skip live fetching in scenario mode
 
+    // Check market status immediately on mount
+    setIsMarketOpen(checkMarketOpen());
+
     const fetchStockPrices = async () => {
+      // Check if market is open
+      const marketOpen = checkMarketOpen();
+      setIsMarketOpen(marketOpen);
+
+      if (!marketOpen) {
+        console.log("[Stock Fetch] Market is closed, skipping update");
+        return; // Don't fetch when market is closed
+      }
+
       const API_KEY = "d5vdv91r01qjj9jj6a20d5vdv91r01qjj9jj6a2g";
       const symbolMap: Record<string, string> = {
         "AAPL": "AAPL",
@@ -340,6 +377,7 @@ export default function App() {
           onBuy={handleBuy}
           onSell={handleSell}
           currentHoldings={portfolio.find(p => p.symbol === selectedStock.symbol)?.shares || 0}
+          isMarketOpen={isMarketOpen}
         />
       );
     }
@@ -374,8 +412,11 @@ export default function App() {
                   </div>
                 ) : (
                   <p className="text-gray-400 flex items-center gap-2">
-                    <span className={`w-2 h-2 rounded-full ${isLive ? 'bg-green-500 animate-pulse' : 'bg-yellow-500'}`}></span>
-                    {isLive ? 'Live Connection Active' : 'Connecting to Exchange...'}
+                    <span className={`w-2 h-2 rounded-full ${!isMarketOpen ? 'bg-red-500' :
+                      isLive ? 'bg-green-500 animate-pulse' : 'bg-yellow-500'
+                      }`}></span>
+                    {!isMarketOpen ? 'Market Closed' :
+                      isLive ? 'Live Connection Active' : 'Connecting to Exchange...'}
                   </p>
                 )}
               </div>

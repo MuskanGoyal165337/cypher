@@ -13,7 +13,6 @@ export function Sidebar({ activeTab, onTabChange, activeScenario }: SidebarProps
     { id: 'market', icon: BarChart2, label: 'Market' },
     { id: 'portfolio', icon: PieChart, label: 'Portfolio' },
     { id: 'news', icon: Newspaper, label: 'News' },
-    { id: 'advisor', icon: MessageSquare, label: 'AI Advisor' },
   ];
 
   return (
@@ -32,8 +31,8 @@ export function Sidebar({ activeTab, onTabChange, activeScenario }: SidebarProps
               key={item.id}
               onClick={() => onTabChange(item.id)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${activeTab === item.id
-                  ? 'bg-blue-600/10 text-blue-500 font-medium border border-blue-600/20'
-                  : 'text-gray-400 hover:bg-gray-900 hover:text-white'
+                ? 'bg-blue-600/10 text-blue-500 font-medium border border-blue-600/20'
+                : 'text-gray-400 hover:bg-gray-900 hover:text-white'
                 }`}
             >
               <item.icon className="w-5 h-5" />
@@ -47,8 +46,8 @@ export function Sidebar({ activeTab, onTabChange, activeScenario }: SidebarProps
           <button
             onClick={() => onTabChange('scenarios')}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${activeScenario
-                ? 'bg-purple-600/20 text-purple-400 font-medium border border-purple-600/30'
-                : 'text-gray-400 hover:bg-gray-900 hover:text-white'
+              ? 'bg-purple-600/20 text-purple-400 font-medium border border-purple-600/30'
+              : 'text-gray-400 hover:bg-gray-900 hover:text-white'
               }`}
           >
             <History className="w-5 h-5" />

@@ -11,9 +11,10 @@ interface StockDetailProps {
   onBuy: (stock: Stock, shares: number) => void;
   onSell: (stock: Stock, shares: number) => void;
   currentHoldings: number;
+  isMarketOpen?: boolean;
 }
 
-export function StockDetail({ stock, onBack, onBuy, onSell, currentHoldings }: StockDetailProps) {
+export function StockDetail({ stock, onBack, onBuy, onSell, currentHoldings, isMarketOpen = true }: StockDetailProps) {
   const [amount, setAmount] = useState<string>("");
   const isPositive = stock.change >= 0;
 
@@ -101,7 +102,9 @@ export function StockDetail({ stock, onBack, onBuy, onSell, currentHoldings }: S
         </div>
         <div className="bg-gray-900 p-4 rounded-xl border border-gray-800">
           <p className="text-gray-400 text-sm">Volume</p>
-          <p className="text-white font-bold">{stock.volume}</p>
+          <p className="text-white font-bold">
+            {stock.volume === "Loading..." && !isMarketOpen ? "Market Closed" : stock.volume}
+          </p>
         </div>
         <div className="bg-gray-900 p-4 rounded-xl border border-gray-800">
           <p className="text-gray-400 text-sm">Your Holdings</p>
