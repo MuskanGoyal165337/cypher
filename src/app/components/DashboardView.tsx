@@ -41,7 +41,7 @@ export function DashboardView({ balance, portfolio, stocks, netWorth, history, o
             <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${isPositive ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
               }`}>
               {isPositive ? <TrendingUp className="w-4 h-4" /> : <TrendingUp className="w-4 h-4 rotate-180" />}
-              {isPositive ? '+' : ''}₹{totalChange.toFixed(2)} ({percentChange.toFixed(5)}%)
+              {isPositive ? '+' : ''}₹{totalChange.toFixed(2)} ({percentChange.toFixed(3)}%)
             </div>
           </div>
 
@@ -127,7 +127,7 @@ export function DashboardView({ balance, portfolio, stocks, netWorth, history, o
                 <div className="text-right">
                   <div className="text-white font-medium">₹{stock.price.toFixed(2)}</div>
                   <div className={`text-sm ${stock.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                    {stock.change >= 0 ? '+' : ''}{stock.changePercent.toFixed(5)}%
+                    {stock.change >= 0 ? '+' : ''}{stock.changePercent.toFixed(3)}%
                   </div>
                 </div>
               </div>
