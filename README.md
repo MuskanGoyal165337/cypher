@@ -1,4 +1,4 @@
-# QUANTUM - AI-Powered Stock Trading Simulator (Co-Code 2026 project)
+# QUANTUM - AI-Powered Stock Trading Simulator              (Co-Code 2026 project Team: Code Strikers)
 
 <div align="center">
 
