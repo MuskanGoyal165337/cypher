@@ -219,12 +219,17 @@ export function generateBehaviorSummary(scenarioId: string, scenarioBehavior?: S
     const riskScore = Math.min(10, Math.round((negativeCount / Math.max(1, trades.length)) * 10));
 
     // Calculate learning score (how well they avoided expected mistakes)
-    let learningScore = 10;
-    if (scenarioBehavior) {
+    // If no trades were made, score is 0 - can't learn without participating
+    let learningScore = 0;
+    if (trades.length === 0) {
+        learningScore = 0; // No participation = no learning
+    } else if (scenarioBehavior) {
         const expectedMistakeCount = scenarioBehavior.expectedMistakes.reduce((sum, mistake) =>
             sum + behaviorCounts[mistake], 0
         );
         learningScore = Math.max(0, 10 - expectedMistakeCount * 2);
+    } else {
+        learningScore = 5; // Default if no behavior expectations defined
     }
 
     return {

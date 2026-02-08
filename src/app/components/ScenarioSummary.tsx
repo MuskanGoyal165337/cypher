@@ -153,8 +153,8 @@ export function ScenarioSummary({
                                     </div>
                                 )}
 
-                                {/* Mistakes Avoided */}
-                                {mistakesAvoided.length > 0 && (
+                                {/* Mistakes Avoided - only show if trades were made */}
+                                {trades.length > 0 && mistakesAvoided.length > 0 && (
                                     <div className="mb-4">
                                         <p className="text-green-400 text-sm font-medium mb-2 flex items-center gap-1">
                                             <CheckCircle className="w-4 h-4" /> Mistakes Avoided
@@ -178,8 +178,8 @@ export function ScenarioSummary({
                                                 <div
                                                     key={tag}
                                                     className={`p-3 rounded-lg border ${isPositiveBehavior(tag as BehaviorTag)
-                                                            ? 'bg-green-500/10 border-green-500/30'
-                                                            : 'bg-gray-800 border-gray-700'
+                                                        ? 'bg-green-500/10 border-green-500/30'
+                                                        : 'bg-gray-800 border-gray-700'
                                                         }`}
                                                 >
                                                     <div className="flex justify-between items-center">
