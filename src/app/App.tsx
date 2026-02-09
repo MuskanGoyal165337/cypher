@@ -79,7 +79,7 @@ export default function App() {
 useEffect(() => {
     const testConnection = async () => {
       try {
-        const response = await fetch('https://your-backend-url.com/api/status');
+        const response = await fetch('https://https://cypher-8lxi.onrender.com/api/health');
         const data = await response.json();
         console.log("Backend says:", data);
         toast.success("Connected to Backend!");
