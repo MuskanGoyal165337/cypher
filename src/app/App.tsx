@@ -76,7 +76,19 @@ export default function App() {
     setIsLoggedIn(false);
     toast.info('Logged out successfully');
   };
-
+useEffect(() => {
+    const testConnection = async () => {
+      try {
+        const response = await fetch('https://your-backend-url.com/api/status');
+        const data = await response.json();
+        console.log("Backend says:", data);
+        toast.success("Connected to Backend!");
+      } catch (error) {
+        console.error("Backend connection failed:", error);
+      }
+    };
+    testConnection();
+  }, []);
   // Check if US market (NYSE/NASDAQ) is open
   // Hours: 9:30 AM - 4:00 PM EST, Monday-Friday
   const checkMarketOpen = (): boolean => {
