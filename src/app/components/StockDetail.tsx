@@ -51,7 +51,7 @@ export function StockDetail({ stock, onBack, onBuy, onSell, currentHoldings, isM
           <p className="text-xl text-gray-400">{stock.name}</p>
         </div>
         <div className="text-right">
-          <div className="text-3xl font-bold text-white">₹{stock.price.toFixed(2)}</div>
+          <div className="text-3xl font-bold text-white">${stock.price.toFixed(2)}</div>
           <div className={`flex items-center justify-end gap-2 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
             {isPositive ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />}
             <span className="font-medium">{stock.changePercent.toFixed(3)}% today</span>
@@ -112,7 +112,7 @@ export function StockDetail({ stock, onBack, onBuy, onSell, currentHoldings, isM
         </div>
         <div className="bg-gray-900 p-4 rounded-xl border border-gray-800">
           <p className="text-gray-400 text-sm">Total Value</p>
-          <p className="text-white font-bold">₹{(currentHoldings * stock.price).toFixed(2)}</p>
+          <p className="text-white font-bold">${(currentHoldings * stock.price).toFixed(2)}</p>
         </div>
       </div>
 

@@ -25,9 +25,9 @@ export function PortfolioView({ portfolio, stocks }: PortfolioViewProps) {
         </div>
         <div className="bg-gray-900 border border-gray-800 px-6 py-3 rounded-2xl text-right">
           <div className="text-gray-400 text-xs uppercase tracking-wider mb-1">Total Asset Value</div>
-          <div className="text-2xl font-bold text-white">₹{totalValue.toFixed(2)}</div>
+          <div className="text-2xl font-bold text-white">${totalValue.toFixed(2)}</div>
           <div className={`text-sm ${totalGain >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-            {totalGain >= 0 ? '+' : ''}₹{totalGain.toFixed(2)} ({totalGainPercent.toFixed(5)}%)
+            {totalGain >= 0 ? '+' : ''}${totalGain.toFixed(2)} ({totalGainPercent.toFixed(5)}%)
           </div>
         </div>
       </div>
@@ -71,12 +71,12 @@ export function PortfolioView({ portfolio, stocks }: PortfolioViewProps) {
                       <div className="text-xs text-gray-500">{stock.name}</div>
                     </td>
                     <td className="p-4 text-right text-gray-300">{item.shares}</td>
-                    <td className="p-4 text-right text-gray-300">₹{item.avgCost.toFixed(2)}</td>
-                    <td className="p-4 text-right text-gray-300">₹{stock.price.toFixed(2)}</td>
-                    <td className="p-4 text-right font-medium text-white">₹{value.toFixed(2)}</td>
+                    <td className="p-4 text-right text-gray-300">${item.avgCost.toFixed(2)}</td>
+                    <td className="p-4 text-right text-gray-300">${stock.price.toFixed(2)}</td>
+                    <td className="p-4 text-right font-medium text-white">${value.toFixed(2)}</td>
                     <td className={`p-4 text-right font-medium ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
                       <div className="flex items-center justify-end gap-1">
-                        {isPositive ? '+' : ''}₹{gain.toFixed(2)}
+                        {isPositive ? '+' : ''}${gain.toFixed(2)}
                       </div>
                       <div className="text-xs opacity-80">{gainPercent.toFixed(5)}%</div>
                     </td>

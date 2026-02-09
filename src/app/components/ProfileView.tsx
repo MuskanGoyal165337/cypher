@@ -1,6 +1,6 @@
 import { User, Trophy, TrendingUp, TrendingDown, Clock, Target, Calendar, Trash2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import { ScenarioResult, getScenarioHistory, getScenarioStats, clearScenarioHistory } from '@/lib/scenarioHistory';
+import { ScenarioResult, getScenarioHistory, getScenarioStatsLocal, clearScenarioHistory } from '@/lib/scenarioHistory';
 import { useState, useEffect } from 'react';
 
 interface ProfileViewProps {
@@ -9,18 +9,18 @@ interface ProfileViewProps {
 
 export function ProfileView({ userName = "Trader" }: ProfileViewProps) {
     const [history, setHistory] = useState<ScenarioResult[]>([]);
-    const [stats, setStats] = useState(getScenarioStats());
+    const [stats, setStats] = useState(getScenarioStatsLocal());
 
     useEffect(() => {
         setHistory(getScenarioHistory());
-        setStats(getScenarioStats());
+        setStats(getScenarioStatsLocal());
     }, []);
 
     const handleClearHistory = () => {
         if (confirm('Are you sure you want to clear all scenario history?')) {
             clearScenarioHistory();
             setHistory([]);
-            setStats(getScenarioStats());
+            setStats(getScenarioStatsLocal());
         }
     };
 
@@ -68,7 +68,7 @@ export function ProfileView({ userName = "Trader" }: ProfileViewProps) {
                         <TrendingDown className="w-6 h-6 text-red-400 mx-auto mb-2" />
                     )}
                     <p className={`text-2xl font-bold ${stats.totalProfitLoss >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                        ₹{Math.abs(stats.totalProfitLoss).toLocaleString('en-IN')}
+                        ${Math.abs(stats.totalProfitLoss).toLocaleString('en-IN')}
                     </p>
                     <p className="text-xs text-gray-400">Total P/L</p>
                 </div>
@@ -150,7 +150,7 @@ export function ProfileView({ userName = "Trader" }: ProfileViewProps) {
                                         {/* Profit/Loss */}
                                         <div className="text-right min-w-[100px]">
                                             <p className={`text-lg font-bold ${result.profitLoss >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                                {result.profitLoss >= 0 ? '+' : ''}₹{result.profitLoss.toLocaleString('en-IN')}
+                                                {result.profitLoss >= 0 ? '+' : ''}${result.profitLoss.toLocaleString('en-IN')}
                                             </p>
                                             <p className={`text-xs ${result.profitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                                                 {result.profitLossPercent >= 0 ? '+' : ''}{result.profitLossPercent.toFixed(2)}%

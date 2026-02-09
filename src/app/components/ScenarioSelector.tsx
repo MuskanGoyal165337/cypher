@@ -175,7 +175,7 @@ export function ScenarioSelector({ isOpen, onClose, onSelectScenario, activeScen
 
                                         <div className="mt-4 flex items-center justify-between">
                                             <div className="text-sm text-gray-400">
-                                                Starting Balance: <span className="text-white font-medium">₹{selectedPreview.startingBalance.toLocaleString()}</span>
+                                                Starting Balance: <span className="text-white font-medium">${selectedPreview.startingBalance.toLocaleString()}</span>
                                             </div>
                                             <button
                                                 onClick={() => handleStartScenario(selectedPreview)}

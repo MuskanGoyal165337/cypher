@@ -1,13 +1,15 @@
-import { BarChart2, History, LayoutDashboard, Newspaper, PieChart, User } from "lucide-react";
+import { BarChart2, History, LayoutDashboard, Newspaper, PieChart, User, LogOut } from "lucide-react";
 import { Scenario } from "@/lib/historicalScenarios";
 
 interface SidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
   activeScenario?: Scenario | null;
+  username?: string | null;
+  onLogout?: () => void;
 }
 
-export function Sidebar({ activeTab, onTabChange, activeScenario }: SidebarProps) {
+export function Sidebar({ activeTab, onTabChange, activeScenario, username, onLogout }: SidebarProps) {
   const menuItems = [
     { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { id: 'market', icon: BarChart2, label: 'Market' },
@@ -65,16 +67,39 @@ export function Sidebar({ activeTab, onTabChange, activeScenario }: SidebarProps
       </div>
 
       <div className="mt-auto p-6 border-t border-gray-900">
-        <button
-          onClick={() => onTabChange('profile')}
-          className={`flex items-center gap-3 transition-colors w-full px-4 py-2 rounded-xl ${activeTab === 'profile'
+        {/* User Profile Section */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+            <User className="w-5 h-5 text-white" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-white font-medium truncate">{username || 'User'}</p>
+            <p className="text-xs text-gray-500">Trader</p>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <button
+            onClick={() => onTabChange('profile')}
+            className={`flex items-center gap-3 transition-colors w-full px-4 py-2 rounded-xl ${activeTab === 'profile'
               ? 'bg-purple-600/10 text-purple-400 font-medium border border-purple-600/20'
               : 'text-gray-400 hover:text-white hover:bg-gray-900'
-            }`}
-        >
-          <User className="w-5 h-5" />
-          Profile
-        </button>
+              }`}
+          >
+            <User className="w-5 h-5" />
+            Profile
+          </button>
+
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              className="flex items-center gap-3 transition-colors w-full px-4 py-2 rounded-xl text-gray-400 hover:text-red-400 hover:bg-red-900/10"
+            >
+              <LogOut className="w-5 h-5" />
+              Logout
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

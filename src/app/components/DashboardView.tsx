@@ -1,4 +1,4 @@
-import { PortfolioItem, Stock } from "@/lib/mockData";
+import { INITIAL_BALANCE, PortfolioItem, Stock } from "@/lib/mockData";
 import { ArrowUpRight, DollarSign, TrendingUp, Wallet } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
@@ -13,7 +13,7 @@ interface DashboardViewProps {
 
 export function DashboardView({ balance, portfolio, stocks, netWorth, history, onTabChange }: DashboardViewProps) {
   // Calculate total profit/loss
-  const startValue = 100000; // Changed to INR
+  const startValue = INITIAL_BALANCE;
   const totalChange = netWorth - startValue;
   const percentChange = (totalChange / startValue) * 100;
   const isPositive = totalChange >= 0;
@@ -35,13 +35,13 @@ export function DashboardView({ balance, portfolio, stocks, netWorth, history, o
               <Wallet className="w-4 h-4" /> Total Net Worth
             </h2>
             <div className="text-5xl font-bold text-white mb-4">
-              ₹{netWorth.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              ${netWorth.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
 
             <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${isPositive ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
               }`}>
               {isPositive ? <TrendingUp className="w-4 h-4" /> : <TrendingUp className="w-4 h-4 rotate-180" />}
-              {isPositive ? '+' : ''}₹{totalChange.toFixed(2)} ({percentChange.toFixed(3)}%)
+              {isPositive ? '+' : ''}${totalChange.toFixed(2)} ({percentChange.toFixed(3)}%)
             </div>
           </div>
 
@@ -78,7 +78,7 @@ export function DashboardView({ balance, portfolio, stocks, netWorth, history, o
             <h3 className="text-gray-400 text-sm mb-1">Buying Power</h3>
             <div className="text-2xl font-bold text-white flex items-center gap-2">
               <DollarSign className="w-5 h-5 text-green-500" />
-              ₹{balance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+              ${balance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
             </div>
           </div>
 
@@ -125,7 +125,7 @@ export function DashboardView({ balance, portfolio, stocks, netWorth, history, o
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-white font-medium">₹{stock.price.toFixed(2)}</div>
+                  <div className="text-white font-medium">${stock.price.toFixed(2)}</div>
                   <div className={`text-sm ${stock.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                     {stock.change >= 0 ? '+' : ''}{stock.changePercent.toFixed(3)}%
                   </div>
@@ -166,7 +166,7 @@ export function DashboardView({ balance, portfolio, stocks, netWorth, history, o
                       <div className="text-xs text-gray-500">{item.shares} shares</div>
                     </div>
                     <div className="text-right">
-                      <div className="text-white font-medium">₹{value.toFixed(2)}</div>
+                      <div className="text-white font-medium">${value.toFixed(2)}</div>
                       <div className={`text-sm ${gain >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                         {gain >= 0 ? '+' : ''}{gainPercent.toFixed(5)}%
                       </div>

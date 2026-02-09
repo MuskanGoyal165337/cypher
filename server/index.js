@@ -12,6 +12,10 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Route imports
+const usersRoutes = require('./routes/users');
+const scenariosRoutes = require('./routes/scenarios');
+
 // Middleware
 app.use(cors({
     origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
@@ -28,6 +32,10 @@ const HF_API_KEY = process.env.HF_API_KEY;
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'Server is running' });
 });
+
+// User and scenario routes
+app.use('/api/users', usersRoutes);
+app.use('/api/scenarios', scenariosRoutes);
 
 // Chat endpoint - proxies to Hugging Face
 app.post('/api/chat', async (req, res) => {

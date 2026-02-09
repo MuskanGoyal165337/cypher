@@ -193,7 +193,7 @@ async function generateAIResponse(input: string, stocks: Stock[], portfolio: Por
 
 function buildMarketContext(stocks: Stock[], portfolio: PortfolioItem[], balance: number, netWorth: number, news: NewsArticle[]): string {
   const stockSummary = stocks.map(s =>
-    `${s.symbol}: ₹${s.price.toFixed(2)} (${s.changePercent >= 0 ? '+' : ''}${s.changePercent.toFixed(2)}%)`
+    `${s.symbol}: $${s.price.toFixed(2)} (${s.changePercent >= 0 ? '+' : ''}${s.changePercent.toFixed(2)}%)`
   ).join(', ');
 
   const portfolioSummary = portfolio.length > 0
@@ -202,7 +202,7 @@ function buildMarketContext(stocks: Stock[], portfolio: PortfolioItem[], balance
       if (!stock) return '';
       const currentValue = stock.price * p.shares;
       const profitLoss = currentValue - (p.avgCost * p.shares);
-      return `${p.symbol}: ${p.shares} shares at ₹${p.avgCost.toFixed(2)}, P/L: ${profitLoss >= 0 ? '+' : ''}₹${profitLoss.toFixed(2)}`;
+      return `${p.symbol}: ${p.shares} shares at $${p.avgCost.toFixed(2)}, P/L: ${profitLoss >= 0 ? '+' : ''}$${profitLoss.toFixed(2)}`;
     }).join('; ')
     : 'No holdings';
 
@@ -213,8 +213,8 @@ function buildMarketContext(stocks: Stock[], portfolio: PortfolioItem[], balance
   return `Current Market Data:
 - Stocks: ${stockSummary}
 - User Portfolio: ${portfolioSummary}
-- Cash: ₹${balance.toFixed(2)}
-- Net Worth: ₹${netWorth.toFixed(2)}
+- Cash: $${balance.toFixed(2)}
+- Net Worth: $${netWorth.toFixed(2)}
 - Recent News: ${newsSummary}`;
 }
 
@@ -222,7 +222,7 @@ function getIntelligentResponse(input: string, stocks: Stock[], portfolio: Portf
   const lowerInput = input.toLowerCase();
 
   // Format currency in INR
-  const formatCurrency = (amount: number) => `₹${amount.toFixed(2)}`;
+  const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
 
   // Check for specific stock mention
   const mentionedStock = stocks.find(stock =>

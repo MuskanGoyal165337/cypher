@@ -29,7 +29,7 @@ export function StockCard({ stock, onClick }: StockCardProps) {
       </div>
 
       <div className="flex justify-between items-end mt-4">
-        <span className="text-2xl font-bold text-white">₹{stock.price.toFixed(2)}</span>
+        <span className="text-2xl font-bold text-white">${stock.price.toFixed(2)}</span>
         <TrendingUp className={`w-12 h-6 ${isPositive ? 'text-green-500/20' : 'text-red-500/20'}`} />
       </div>
     </motion.div>

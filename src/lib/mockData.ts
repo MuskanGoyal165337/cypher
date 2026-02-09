@@ -9,8 +9,9 @@ export interface Stock {
   history: { time: string; value: number }[];
 }
 
-export const INITIAL_BALANCE = 100000; // ₹100,000 INR
+export const INITIAL_BALANCE = 10000; // $10,000 USD
 
+// Available symbols in Data folder: AAPL, AMZN, CSCO, GOOG, IBM, MSFT
 export const MOCK_STOCKS: Stock[] = [
   {
     symbol: "AAPL",
@@ -33,7 +34,7 @@ export const MOCK_STOCKS: Stock[] = [
     history: Array.from({ length: 20 }, (_, i) => ({ time: `${i + 9}:00`, value: 415 + Math.random() * 8 }))
   },
   {
-    symbol: "GOOGL",
+    symbol: "GOOG",
     name: "Alphabet Inc.",
     price: 192.50,
     change: 0,
@@ -53,64 +54,24 @@ export const MOCK_STOCKS: Stock[] = [
     history: Array.from({ length: 20 }, (_, i) => ({ time: `${i + 9}:00`, value: 225 + Math.random() * 5 }))
   },
   {
-    symbol: "NVDA",
-    name: "NVIDIA Corporation",
-    price: 118.50,
+    symbol: "IBM",
+    name: "IBM Corporation",
+    price: 145.00,
     change: 0,
     changePercent: 0,
     volume: "Loading...",
-    marketCap: "$2.9T",
-    history: Array.from({ length: 20 }, (_, i) => ({ time: `${i + 9}:00`, value: 118 + Math.random() * 3 }))
+    marketCap: "$130B",
+    history: Array.from({ length: 20 }, (_, i) => ({ time: `${i + 9}:00`, value: 145 + Math.random() * 3 }))
   },
   {
-    symbol: "META",
-    name: "Meta Platforms Inc.",
-    price: 585.30,
+    symbol: "CSCO",
+    name: "Cisco Systems Inc.",
+    price: 48.50,
     change: 0,
     changePercent: 0,
     volume: "Loading...",
-    marketCap: "$1.5T",
-    history: Array.from({ length: 20 }, (_, i) => ({ time: `${i + 9}:00`, value: 585 + Math.random() * 10 }))
-  },
-  {
-    symbol: "TSLA",
-    name: "Tesla Inc.",
-    price: 248.50,
-    change: 0,
-    changePercent: 0,
-    volume: "Loading...",
-    marketCap: "$791B",
-    history: Array.from({ length: 20 }, (_, i) => ({ time: `${i + 9}:00`, value: 248 + Math.random() * 8 }))
-  },
-  {
-    symbol: "JPM",
-    name: "JPMorgan Chase & Co.",
-    price: 242.80,
-    change: 0,
-    changePercent: 0,
-    volume: "Loading...",
-    marketCap: "$698B",
-    history: Array.from({ length: 20 }, (_, i) => ({ time: `${i + 9}:00`, value: 242 + Math.random() * 5 }))
-  },
-  {
-    symbol: "V",
-    name: "Visa Inc.",
-    price: 315.40,
-    change: 0,
-    changePercent: 0,
-    volume: "Loading...",
-    marketCap: "$595B",
-    history: Array.from({ length: 20 }, (_, i) => ({ time: `${i + 9}:00`, value: 315 + Math.random() * 6 }))
-  },
-  {
-    symbol: "WMT",
-    name: "Walmart Inc.",
-    price: 92.50,
-    change: 0,
-    changePercent: 0,
-    volume: "Loading...",
-    marketCap: "$745B",
-    history: Array.from({ length: 20 }, (_, i) => ({ time: `${i + 9}:00`, value: 92 + Math.random() * 2 }))
+    marketCap: "$195B",
+    history: Array.from({ length: 20 }, (_, i) => ({ time: `${i + 9}:00`, value: 48 + Math.random() * 2 }))
   }
 ];
 

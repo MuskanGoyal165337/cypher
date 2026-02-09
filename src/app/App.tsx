@@ -12,9 +12,10 @@ import { INITIAL_BALANCE, MOCK_STOCKS, PortfolioItem, Stock } from "@/lib/mockDa
 import { MOCK_NEWS } from "@/lib/newsData";
 import { Scenario, buildPriceHistory, isSymbolInScenario } from "@/lib/historicalScenarios";
 import { logTrade, clearTradeLog, getTradeLog, generateBehaviorSummary, TradeAction, BehaviorSummary } from "@/lib/behaviorTracker";
-import { addScenarioResult } from "@/lib/scenarioHistory";
+import { addScenarioResult, initializeUser } from "@/lib/scenarioHistory";
 import { ScenarioSummary } from "@/app/components/ScenarioSummary";
 import { ProfileView } from "@/app/components/ProfileView";
+import { LoginPage } from "@/app/components/LoginPage";
 import { toast, Toaster } from "sonner";
 import { Search, History } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -45,6 +46,37 @@ export default function App() {
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [isMarketOpen, setIsMarketOpen] = useState(true);
 
+  // Auth state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+
+  // Check for existing login on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem('cypher_username');
+    if (storedUser) {
+      setCurrentUser(storedUser);
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  // Login handler
+  const handleLogin = async (username: string) => {
+    localStorage.setItem('cypher_username', username);
+    setCurrentUser(username);
+    setIsLoggedIn(true);
+    await initializeUser(username);
+    toast.success(`Welcome, ${username}!`);
+  };
+
+  // Logout handler
+  const handleLogout = () => {
+    localStorage.removeItem('cypher_username');
+    localStorage.removeItem('cypher_user_id');
+    setCurrentUser(null);
+    setIsLoggedIn(false);
+    toast.info('Logged out successfully');
+  };
+
   // Check if US market (NYSE/NASDAQ) is open
   // Hours: 9:30 AM - 4:00 PM EST, Monday-Friday
   const checkMarketOpen = (): boolean => {
@@ -70,6 +102,15 @@ export default function App() {
   };
 
   // Update stocks when scenario changes - uses accurate historical price data
+  // Initialize user on app startup
+  useEffect(() => {
+    const init = async () => {
+      await initializeUser();
+      console.log('[App] User initialized, scenario history loaded from database');
+    };
+    init();
+  }, []);
+
   useEffect(() => {
     if (activeScenario) {
       const currentDay = activeScenario.days[scenarioDayIndex];
@@ -523,17 +564,22 @@ export default function App() {
       case 'news':
         return <NewsView activeScenario={activeScenario} scenarioDayIndex={scenarioDayIndex} />;
       case 'profile':
-        return <ProfileView />;
+        return <ProfileView userName={currentUser || 'Trader'} />;
       default:
         return null;
     }
   };
 
+  // Show login page if not logged in
+  if (!isLoggedIn) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
+
   return (
     <div className="flex min-h-screen bg-black text-gray-100 font-sans selection:bg-blue-500/30">
       <Sidebar
         activeTab={activeTab}
-        onTabChange={(tab) => {
+        onTabChange={(tab: string) => {
           if (tab === 'scenarios') {
             setIsScenarioSelectorOpen(true);
             return;
@@ -545,6 +591,8 @@ export default function App() {
           }
         }}
         activeScenario={activeScenario}
+        username={currentUser}
+        onLogout={handleLogout}
       />
 
       <div className="flex-1 flex flex-col overflow-hidden">

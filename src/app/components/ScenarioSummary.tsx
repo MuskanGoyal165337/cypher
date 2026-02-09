@@ -88,7 +88,7 @@ export function ScenarioSummary({
                                 <div className="bg-gray-800 p-4 rounded-xl text-center">
                                     <p className="text-gray-400 text-sm">Final Balance</p>
                                     <p className={`text-2xl font-bold ${isProfit ? 'text-green-400' : 'text-red-400'}`}>
-                                        ₹{finalBalance.toLocaleString()}
+                                        ${finalBalance.toLocaleString()}
                                     </p>
                                 </div>
                                 <div className="bg-gray-800 p-4 rounded-xl text-center">
@@ -139,7 +139,7 @@ export function ScenarioSummary({
                                                     <div className="mt-2 space-y-1">
                                                         {tradesByBehavior[mistake]?.slice(0, 3).map(trade => (
                                                             <div key={trade.id} className="text-xs text-gray-400 bg-gray-800/50 px-2 py-1 rounded">
-                                                                {trade.type.toUpperCase()} {trade.shares} {trade.symbol} @ ₹{trade.price.toFixed(2)}
+                                                                {trade.type.toUpperCase()} {trade.shares} {trade.symbol} @ ${trade.price.toFixed(2)}
                                                                 <span className="text-gray-500"> (Day {trade.scenarioDay + 1}, {trade.marketChange >= 0 ? '+' : ''}{trade.marketChange.toFixed(1)}%)</span>
                                                             </div>
                                                         ))}
@@ -191,7 +191,7 @@ export function ScenarioSummary({
                                                     <div className="mt-2 space-y-1">
                                                         {tagTrades.slice(0, 2).map(trade => (
                                                             <div key={trade.id} className="text-xs text-gray-500">
-                                                                → {trade.type.toUpperCase()} {trade.shares} {trade.symbol} @ ₹{trade.price.toFixed(2)} on Day {trade.scenarioDay + 1}
+                                                                → {trade.type.toUpperCase()} {trade.shares} {trade.symbol} @ ${trade.price.toFixed(2)} on Day {trade.scenarioDay + 1}
                                                             </div>
                                                         ))}
                                                     </div>
