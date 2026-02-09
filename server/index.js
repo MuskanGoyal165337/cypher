@@ -18,7 +18,7 @@ const scenariosRoutes = require('./routes/scenarios');
 
 // Middleware
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:5173', 'http://127.0.0.1:5173'],
     methods: ['POST', 'GET'],
     allowedHeaders: ['Content-Type']
 }));

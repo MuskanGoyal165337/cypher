@@ -3,7 +3,9 @@ import { Bot, Send, X, MessageSquare } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "motion/react";
 import { Stock, PortfolioItem } from "@/lib/mockData";
+
 import { NewsArticle } from "@/lib/newsData";
+import { API_BASE } from "@/lib/api";
 
 /**
  * AI-Powered Financial Chatbot using Hugging Face Flan-UL2 Model
@@ -158,7 +160,8 @@ async function generateAIResponse(input: string, stocks: Stock[], portfolio: Por
     const context = buildMarketContext(stocks, portfolio, balance, netWorth, news);
 
     // Call the Express backend server
-    const response = await fetch('http://localhost:3001/api/chat', {
+    // Call the Express backend server
+    const response = await fetch(`${API_BASE}/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

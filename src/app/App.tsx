@@ -227,7 +227,7 @@ export default function App() {
         return; // Don't fetch when market is closed
       }
 
-      const API_KEY = "d5vdv91r01qjj9jj6a20d5vdv91r01qjj9jj6a2g";
+      const API_KEY = import.meta.env.VITE_FINNHUB_API_KEY || "d5vdv91r01qjj9jj6a20d5vdv91r01qjj9jj6a2g";
       const symbolMap: Record<string, string> = {
         "AAPL": "AAPL",
         "MSFT": "MSFT",
