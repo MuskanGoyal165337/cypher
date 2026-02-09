@@ -76,19 +76,19 @@ export default function App() {
     setIsLoggedIn(false);
     toast.info('Logged out successfully');
   };
-useEffect(() => {
-    const testConnection = async () => {
-      try {
-        const response = await fetch('https://https://cypher-8lxi.onrender.com/api/health');
-        const data = await response.json();
-        console.log("Backend says:", data);
-        toast.success("Connected to Backend!");
-      } catch (error) {
-        console.error("Backend connection failed:", error);
-      }
-    };
-    testConnection();
-  }, []);
+  useEffect(() => {
+      const testConnection = async () => {
+        try {
+          const response = await fetch('https://https://cypher-8lxi.onrender.com/api/health');
+          const data = await response.json();
+          console.log("Backend says:", data);
+          toast.success("Connected to Backend!");
+        } catch (error) {
+          console.error("Backend connection failed:", error);
+        }
+      };
+      testConnection();
+    }, []);
   // Check if US market (NYSE/NASDAQ) is open
   // Hours: 9:30 AM - 4:00 PM EST, Monday-Friday
   const checkMarketOpen = (): boolean => {
